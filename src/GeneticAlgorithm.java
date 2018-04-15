@@ -1,17 +1,16 @@
-package com.mycompany.finalproject;
-
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+
+import org.apache.log4j.spi.LoggerFactory;
+
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Random;
 import java.util.TreeMap;
-import sun.security.x509.X500Name;
+import java.util.logging.Logger;
 
 /**
  * @author zhang
@@ -29,6 +28,8 @@ public class GeneticAlgorithm {
     private int endingX;
     private int endingY;
     private TreeMap<Double,Gene>maxGeneGroup;
+    private Logger logger;
+
     public GeneticAlgorithm(int chromosomeSize, int geneLength, double crossoverProbability, double mutationProbability, int[][] map, int endingX, int endingY) {
         this.chromosomeSize = chromosomeSize;
         this.geneLength = geneLength;
@@ -44,12 +45,13 @@ public class GeneticAlgorithm {
         for (int i = 0; i < chromosomeSize; i++) {
             Gene gene = new Gene(geneLength);
             double score = getFitnessScore(gene.getGeneSequence());
-            if (score > maxGene.getScore()) {
+            if (score > maxGene.getFitnessScore()) {
                 maxGene = gene;
             }
-            gene.setScore(score);
+            gene.setFitnessScore(score);
             geneGroup.add(gene);
         }
+        logger = Logger.getLogger(GeneticAlgorithm.class.getName());
     }
 
     public Gene getMaxGene() {
@@ -85,25 +87,25 @@ public class GeneticAlgorithm {
         double score1 = getFitnessScore(c1.getGeneSequence());
         //System.out.println("Score1");
         double score2 = getFitnessScore(c2.getGeneSequence());
-        if (score1 > maxGene.getScore()) {
+        if (score1 > maxGene.getFitnessScore()) {
             maxGene = c1;
-            c1.setScore(score1);
-            maxGeneGroup.put(c1.getScore(), c1);
+            c1.setFitnessScore(score1);
+            maxGeneGroup.put(c1.getFitnessScore(), c1);
         }
-        if (score2 > maxGene.getScore()) {
+        if (score2 > maxGene.getFitnessScore()) {
             maxGene = c2;
-            c2.setScore(score2);
-            maxGeneGroup.put(c2.getScore(), c2);
+            c2.setFitnessScore(score2);
+            maxGeneGroup.put(c2.getFitnessScore(), c2);
         }
-        c1.setScore(score1);
-        c2.setScore(score2);
+        c1.setFitnessScore(score1);
+        c2.setFitnessScore(score2);
 
         geneGroup.add(c1);
         geneGroup.add(c2);
     }
 
-    private void mutation(int[] gene1, int[] gene2, int n) {
-        System.out.println("entering mutation");
+    public void mutation(int[] gene1, int[] gene2, int n) {
+        logger.info("entering mutation");
         for (int i = n; i < geneLength; i++) {
             int tmp = gene1[i];
             gene1[i] = gene2[i];
@@ -111,8 +113,8 @@ public class GeneticAlgorithm {
         }
     }
 
-    private void crossover(int[] gene1, int[] gene2, int n) {
-        System.out.println("Entering crossover");
+    public void crossover(int[] gene1, int[] gene2, int n) {
+        logger.info("Entering crossover");
         if (gene1[n] == 0) {
             gene1[n] = 1;
         } else {
@@ -220,7 +222,7 @@ public class GeneticAlgorithm {
     public double getTotalFitnessScore(List<Gene> genes) {
         double score = 0.0;
         for (int i = 0; i < genes.size(); i++) {
-            score += genes.get(i).getScore();
+            score += genes.get(i).getFitnessScore();
         }
         return score;
     }
@@ -231,7 +233,7 @@ public class GeneticAlgorithm {
         double score, sum = 0, num = random.nextDouble(), total = getTotalFitnessScore(geneGroup);
         for (int i = 0; i < geneGroup.size(); i++) {
             Gene gene = geneGroup.get(i);
-            score = gene.getScore();
+            score = gene.getFitnessScore();
             sum += score / total;
             if (sum > num) {
                 return i;

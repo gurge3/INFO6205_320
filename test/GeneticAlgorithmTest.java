@@ -104,4 +104,24 @@ public class GeneticAlgorithmTest {
     Assert.assertEquals(0.0, g2.getFitnessScore(), 0.1);
   }
 
+  /**
+   * For this test, we are using random evoluation to convince that after certain times of
+   * evolution, the fitness will approach to a desired value.
+   */
+  @Test
+  public void testEvoluation() {
+    GeneticAlgorithm ga = new GeneticAlgorithm(140, 70, 0.7, 0.001, MazePrinter.map, MazePrinter.END_X, MazePrinter.END_Y);
+    int i = 0;
+    while (i < 30000) {
+      int p1 = ga.getParent();
+      int p2 = ga.getParent();
+      ga.crossoverAndMutation(p1, p2);
+      i++;
+    }
+    System.out.println(ga.getMaxGene().getFitnessScore());
+    // We are testing that after certain amount of iterations, we can get a good fitness score
+    Assert.assertTrue(ga.getMaxGene().getFitnessScore() > 0.5);
+  }
+
+
 }
