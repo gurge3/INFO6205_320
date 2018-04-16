@@ -1,7 +1,9 @@
+
+import org.apache.log4j.Logger;
+
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Logger;
 
 import javax.swing.*;
 
@@ -90,7 +92,7 @@ public class MazePrinter extends JFrame {
       ga.crossoverAndMutation(p1, p2);
       logger.info("No: " + i + " fitness score: " + ga.getMaxGene().getFitnessScore());
       i++;
-      if (i > 100)
+      if (i > 20000)
         break;
     }
 

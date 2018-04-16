@@ -1,16 +1,17 @@
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
 
-import org.apache.log4j.spi.LoggerFactory;
+
+import org.apache.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.TreeMap;
-import java.util.logging.Logger;
 
 /**
  * @author zhang
@@ -69,16 +70,18 @@ public class GeneticAlgorithm {
             gene1[i] = p1.getGeneSequence()[i];
             gene2[i] = p2.getGeneSequence()[i];
         }
-        double r = new Random().nextDouble();
-        if (r >= crossoverProbability) {
-            int n = random.nextInt(geneLength);
-            mutation(gene1, gene2, n);
 
-        }
-        r = random.nextDouble();
+        // No Mutation For Now
+//        double r = new Random().nextDouble();
+//        if (r >= mutationProbability) {
+//            int n = random.nextInt(geneLength);
+//            mutation(gene1, gene2, n);
+//
+//        }
+        double r = random.nextDouble();
         if (r >= mutationProbability) {
             int n = random.nextInt(geneLength);
-            crossover(gene1, gene2, n);
+            mutation(gene1, gene2, n);
 
         }
         c1.setGeneSequence(gene1);
